@@ -4,14 +4,8 @@ name: Rust CI
 jobs:
   test:
     name: Test
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        config:
-          - os: ubuntu-latest
-          - os: macos-latest
-          - os: windows-latest
     steps:
       # Checks out the repository under `$GITHUB_WORKSPACE`, so the workflow can
       # access it. See https://github.com/actions/checkout.
@@ -29,25 +23,3 @@ jobs:
 
       - name: Run Cargo tests
         run: cargo test --release
-
-  clippy:
-    name: Clippy
-
-    # This is a code lint, so we don't need to run it on multiple operating
-    # systems.
-    runs-on: ubuntu-latest
-    steps:
-      # Checks out the repository under `$GITHUB_WORKSPACE`, so the workflow can
-      # access it. See https://github.com/actions/checkout.
-      - name: Checkout the workspace
-        uses: actions/checkout@v2
-
-      # Install stable Clippy
-      - name: Install Clippy
-        run: rustup component add clippy
-
-      # Run Clippy. See https://github.com/actions-rs/clippy-check.
-      - uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
